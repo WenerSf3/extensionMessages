@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modifica Fundo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            height: 300px;
+            width: 250px;
+            border-radius: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        div{
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid rgba(79, 79, 79, 0.289);
+        }
+        h3{
+            font-weight: 500;
+        }
+        .optionsGwhats{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #modifyButton{
+            background-color: green;
+            border: 2px;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loginn">
+        <label for="">Email</label>
+        <input type="text" class="email">
+        <label for="">Senha</label>
+        <input type="text"  class="password">
+        <button type="button" class="login-account">Logar</button>
+    </div>
+    
+    <div class="automation" style="display: none;">
+        <h3>GWhats Automation</h3>
+        <div class="optionsGwhats">
+            <label>Automação</label>
+            <button id="modifyButton">Iniciar</button>
+        </div>
+    </div>
+    <script src="login.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
