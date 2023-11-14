@@ -140,8 +140,11 @@ document.addEventListener("DOMContentLoaded", function () {
       let btnErro = e.target.querySelector(
         ".emrlamx0.aiput80m.h1a80dm5.sta02ykp.g0rxnol2.l7jjieqr.hnx8ox4h.f8jlpxt4.l1l4so3b.le5p0ye3.m2gb0jvt.rfxpxord.gwd8mfxi.mnh9o63b.qmy7ya1v.dcuuyf4k.swfxs4et.bgr8sfoe.a6r886iw.fx1ldmn8.orxa12fk.bkifpc9x.rpz5dbxo.bn27j4ou.oixtjehm.hjo1mxmu.snayiamo.szmswy5y"
       );
+      let invalidNumber = e.target.querySelector("button");
 
       if (btnSend) {
+        console.log('acheiiii',e.btnSend);
+
         let btnSendMessage = e.target.querySelector("._2xy_p._3XKXx > button");
         setTimeout(async() => {
           btnSendMessage.click();
@@ -152,6 +155,8 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }, 100);
       } else if (btnErro) {
+        console.log('erroooo',e.target);
+
         let btnError = e.target.querySelector("button");
         setTimeout(async () => {
           btnError.click();
@@ -161,7 +166,17 @@ document.addEventListener("DOMContentLoaded", function () {
             chrome.runtime.sendMessage({ action: 'voltaParaExtensao', dados: 'dados que você quer enviar' });
           }
         }, 100);
-      } else {
+      } else if(invalidNumber){
+        let item = e.target.querySelector('button');
+        setTimeout(async() => {
+          item.click();
+          document.removeEventListener("DOMSubtreeModified", escutaBodyWrapper);
+          let resp = await changeMessage(id, "error", auth);
+          if(resp){
+            chrome.runtime.sendMessage({ action: 'voltaParaExtensao', dados: 'dados que você quer enviar' });
+          }
+        }, 100);
+      }else{
         return;
       }
       // else {
