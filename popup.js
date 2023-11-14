@@ -4,11 +4,15 @@ let intervalChecked = 0;
 let contentText;
 
 document.addEventListener("DOMContentLoaded", function () {
-  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.action === 'voltaParaExtensao') {
+  chrome.runtime.onMessage.addListener(function (
+    message,
+    sender,
+    sendResponse
+  ) {
+    if (message.action === "voltaParaExtensao") {
       setTimeout(() => {
         timerMessages(true);
-      }, 2000);
+      }, 5000);
     }
   });
 
@@ -63,11 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function startProcess() {
       return new Promise(async (resolve) => {
         let [message] = await getMessages();
-        // message.forEach(element => {
-        //   let item = document.createElement('p');
-        //   item.innerText = `${element.message} => ${element.number}`
-        //   document.querySelector('.automation-list').appendChild(item);
-        // });
         resolve(message);
       });
     }
@@ -115,20 +114,22 @@ document.addEventListener("DOMContentLoaded", function () {
   async function clickSend(id, number, message, auth) {
     number = await removeCaracters(number);
     console.log(number, message);
-
     let html = document.querySelector("body");
     let newElement = document.createElement("a");
-    newElement.href = `https://wa.me/${number}?text=${message}`;
+    newElement.href = `https://api.whatsapp.com/send/?phone=${number}&text=${message}&type=phone_number&app_absent=0`;
     html.appendChild(newElement);
 
     window.debounceRequest = false;
     window.debounceUrl = false;
-    document.addEventListener("DOMSubtreeModified", escutaBodyWrapper);
 
+    document.addEventListener("DOMSubtreeModified", escutaBodyWrapper);
+    newElement.addEventListener("click", (e) => {
+      e.preventDefault();
+    });
     newElement.click();
 
     function escutaBodyWrapper(e) {
-      escutaBody(e, id, auth,newElement);
+      escutaBody(e, id, auth, newElement);
     }
 
     function escutaBody(e, id, auth, linkMessage) {
@@ -139,8 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
       let invalidNumber = e.target.querySelector("button");
 
       if (btnSend) {
-        console.log('acheiiii', e.btnSend);
-
         let btnSendMessage = e.target.querySelector("._2xy_p._3XKXx > button");
         setTimeout(async () => {
           btnSendMessage.click();
@@ -148,40 +147,57 @@ document.addEventListener("DOMContentLoaded", function () {
           let resp = await changeMessage(id, "sent", auth);
           if (resp) {
             linkMessage.remove();
-            chrome.runtime.sendMessage({ action: 'voltaParaExtensao', dados: 'dados que você quer enviar' });
+            chrome.runtime.sendMessage({
+              action: "voltaParaExtensao",
+              dados: "dados que você quer enviar",
+            });
           }
         }, 100);
       } else if (btnErro) {
-        console.log('erroooo', e.target);
+        console.log("erroooo", e.target);
 
         let btnError = e.target.querySelector("button");
+        document.querySelector(".notification-error-card").style.display = 'flex';
         setTimeout(async () => {
           btnError.click();
           document.removeEventListener("DOMSubtreeModified", escutaBodyWrapper);
+
           let resp = await changeMessage(id, "error", auth);
           if (resp) {
             linkMessage.remove();
-            chrome.runtime.sendMessage({ action: 'voltaParaExtensao', dados: 'dados que você quer enviar' });
+            chrome.runtime.sendMessage({
+              action: "voltaParaExtensao",
+              dados: "dados que você quer enviar",
+            });
           }
         }, 100);
       } else if (invalidNumber) {
-        let item = e.target.querySelector('button');
+        let item = e.target.querySelector("button");
         setTimeout(async () => {
           item.click();
           document.removeEventListener("DOMSubtreeModified", escutaBodyWrapper);
           let resp = await changeMessage(id, "error", auth);
           if (resp) {
             linkMessage.remove();
-            chrome.runtime.sendMessage({ action: 'voltaParaExtensao', dados: 'dados que você quer enviar' });
+            chrome.runtime.sendMessage({
+              action: "voltaParaExtensao",
+              dados: "dados que você quer enviar",
+            });
           }
         }, 100);
       } else {
-        let textExist = document.querySelector('.selectable-text.copyable-text.iq0m558w.g0rxnol2 > .selectable-text.copyable-text');
+        let textExist = document.querySelector(
+          ".selectable-text.copyable-text.iq0m558w.g0rxnol2 > .selectable-text.copyable-text"
+        );
         if (!window.debounceUrl) {
-          if (textExist && textExist != '') {
+          if (textExist && textExist != "" && textExist != "\n") {
             window.debounceUrl = true;
             setTimeout(() => {
-              linkMessage.click();
+              if (!btnSend) {
+                console.log("tem texto mas nao tem botão");
+              } else {
+                btnSend.click();
+              }
               window.debounceUrl = false;
               return;
             }, 2000);
@@ -204,10 +220,10 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             )
               .then(async () => {
-                resultado('sucesso');
+                resultado("sucesso");
               })
               .catch((erro) => {
-                resultado('error')
+                resultado("error");
               });
             setTimeout(() => {
               window.debounceRequest = false;
@@ -215,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             return;
           }
-        })
+        });
       }
     }
 
