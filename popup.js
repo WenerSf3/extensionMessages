@@ -127,10 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     newElement.click();
 
-    function aaaaa() {
-        console.log('kaosdninauisdnisandonasoidnasodnsajkdnkasndkjsajdnsjkadnkasndkjanskjdnkjsdas');
-    }
-
     function escutaBodyWrapper(e) {
       escutaBody(e, id, auth);
     }
